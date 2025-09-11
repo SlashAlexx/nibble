@@ -3,14 +3,18 @@ package window;
 // Window Class for User Interaction and GUI Functionality
 // Alex Roberts
 
-import java.io.*;
+
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+
+import main.Main;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Font;
-
+import java.awt.Image;
+import java.awt.Insets;
 import value.Value;
-import value.Value.COMPARE_TYPE;
 
 public class Window {
 
@@ -24,8 +28,11 @@ public class Window {
 
     private JLabel answerStatusLabel = null;
 
+    private JButton settingsGear = null;
+    private boolean settingsEnabled = false;
     private JComboBox<String> baseSettings = null;
     private JComboBox<String> expectedSettings = null;
+    private JLabel settingsConvToText = null;
     public Value.COMPARE_TYPE selectedBaseSetting = Value.COMPARE_TYPE.BIN;
     public Value.COMPARE_TYPE selectedExpectedSetting = Value.COMPARE_TYPE.DEC;
 
@@ -40,6 +47,7 @@ public class Window {
         frame.setLayout(null);
         frame.setResizable(false);
         frame.setVisible(false); // Force Use of displayWindow() method
+        frame.setBackground(Color.darkGray);
         
         // Header Label: ToConvert
         promptLabel = new JLabel("");
@@ -64,6 +72,25 @@ public class Window {
         });
         
         frame.add(answerField);
+
+        // Settings Button
+        settingsGear = new JButton();
+        settingsGear.setBounds(445, 15, 20, 20);
+        settingsGear.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        settingsGear.setBackground(Color.WHITE);
+        settingsGear.setBorder(new EmptyBorder(new Insets(0, 0, 0, 0)));
+        try{   
+            ImageIcon icon = new ImageIcon(Main.class.getResource("/assets/gear-solid-full.png"));
+            Image img = icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+            settingsGear.setIcon(new ImageIcon(img));
+        } catch (Exception e){
+        System.out.println("Unable to locate image assets");
+        }
+        settingsGear.addActionListener(e -> {
+            settingsEnabled = !settingsEnabled;
+            toggleSettings(settingsEnabled);    
+        });
+        frame.add(settingsGear);
         
         // Answer Correct/Incorrect Text
         answerStatusLabel = new JLabel();
@@ -78,8 +105,9 @@ public class Window {
         // Dropdown for Base Value Type
         String baseValueSettings[] = {"Decimal", "Binary", "Hex"};
         baseSettings = new JComboBox<>(baseValueSettings);
-        baseSettings.setBounds(275, 25, 85, 30);
+        baseSettings.setBounds(250, 50, 80, 30);
         baseSettings.setSelectedIndex(1);
+        baseSettings.setCursor(new Cursor(Cursor.HAND_CURSOR));
         baseSettings.addActionListener(e -> {
             switch (baseSettings.getSelectedIndex()){
                 case 0: selectedBaseSetting = Value.COMPARE_TYPE.DEC; break;
@@ -89,11 +117,18 @@ public class Window {
             }
         });
         frame.add(baseSettings);
+
+        settingsConvToText = new JLabel("to");
+        settingsConvToText.setBounds(350, 50, 30, 30);
+        Font settingsConvToTextFont = new Font("Serif", Font.PLAIN, 16);
+        settingsConvToText.setFont(settingsConvToTextFont);
+        frame.add(settingsConvToText);
         
         // Dropdown for Expected Conversion Type
         String expectedValueSettings[] = {"Decimal", "Binary", "Hex"};
         expectedSettings = new JComboBox<>(expectedValueSettings);
-        expectedSettings.setBounds(380, 25, 85, 30);
+        expectedSettings.setBounds(380, 50, 85, 30);
+        expectedSettings.setCursor(new Cursor(Cursor.HAND_CURSOR));
         expectedSettings.addActionListener(e -> {
             switch (expectedSettings.getSelectedIndex()){
                 case 0: selectedExpectedSetting = Value.COMPARE_TYPE.DEC; break;
@@ -104,6 +139,7 @@ public class Window {
         });
         frame.add(expectedSettings);
 
+        toggleSettings(false);
     }
 
     public void displayWindow(boolean value){
@@ -123,7 +159,7 @@ public class Window {
         String inputTypeText = "";
         switch (inputType) {
             case DEC: inputTypeText = ""; break;
-            case BIN: inputTypeText = ""; break;
+            case BIN: inputTypeText = "0b"; break;
             case HEX: inputTypeText = "0x"; break;        
             default: break;
         }
@@ -152,4 +188,9 @@ public class Window {
         timer.start();
     }
 
+    private void toggleSettings(boolean value){
+        baseSettings.setVisible(value);
+        expectedSettings.setVisible(value);
+        settingsConvToText.setVisible(value);
+    }
 }
