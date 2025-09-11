@@ -47,7 +47,13 @@ public class Window {
         frame.setLayout(null);
         frame.setResizable(false);
         frame.setVisible(false); // Force Use of displayWindow() method
-        frame.setBackground(Color.darkGray);
+        frame.setDefaultCloseOperation((JFrame.DO_NOTHING_ON_CLOSE));
+        frame.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e){
+                System.exit(0);
+            }
+        });
         
         // Header Label: ToConvert
         promptLabel = new JLabel("");
