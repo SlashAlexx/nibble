@@ -31,12 +31,17 @@ public class Value {
         return inputDec == dec; // Always compare against dec
     }
 
-    private int parseToDec(String value, COMPARE_TYPE type){
-        switch (type){
-            case DEC: return Integer.parseInt(value);
-            case BIN: return Integer.parseInt(value, 2);
-            case HEX: return Integer.parseInt(value, 16);
-            default: return -1;
+    private int parseToDec(String value, COMPARE_TYPE type) throws NumberFormatException{
+        try{
+            switch (type){
+                case DEC: return Integer.parseInt(value);
+                case BIN: return Integer.parseInt(value, 2);
+                case HEX: return Integer.parseInt(value, 16);
+                default: return -1;
+            }
+        }
+        catch (Exception NumberFormatException){
+            return -1; // Will always result in incorrect.
         }
     }
 }

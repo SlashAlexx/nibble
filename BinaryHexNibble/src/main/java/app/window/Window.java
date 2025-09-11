@@ -79,6 +79,7 @@ public class Window {
         String baseValueSettings[] = {"Decimal", "Binary", "Hex"};
         baseSettings = new JComboBox<>(baseValueSettings);
         baseSettings.setBounds(275, 25, 85, 30);
+        baseSettings.setSelectedIndex(1);
         baseSettings.addActionListener(e -> {
             switch (baseSettings.getSelectedIndex()){
                 case 0: selectedBaseSetting = Value.COMPARE_TYPE.DEC; break;
@@ -150,4 +151,5 @@ public class Window {
         timer.setRepeats(false);
         timer.start();
     }
+
 }

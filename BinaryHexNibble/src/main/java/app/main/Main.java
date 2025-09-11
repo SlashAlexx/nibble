@@ -18,6 +18,7 @@ public class Main {
 
             Value currentValue = new Value();
             currentValue.newValue(); 
+            boolean skipping_question = false;
 
             Value.COMPARE_TYPE baseSettingType = window.selectedBaseSetting;
             Value.COMPARE_TYPE expectedSettingType = window.selectedExpectedSetting;
@@ -29,12 +30,15 @@ public class Main {
                 default: break;
             }
 
-            while (!window.answerEntered){
+            while (!window.answerEntered && !skipping_question){
+                if (baseSettingType != window.selectedBaseSetting || expectedSettingType != window.selectedExpectedSetting) skipping_question = true;
                 Thread.sleep(25);
             }  
 
-            boolean result = currentValue.compare(window.lastAnswer, expectedSettingType);
-            window.setAnswerStatusText(result);
+            if (!skipping_question){
+                boolean result = currentValue.compare(window.lastAnswer, expectedSettingType);
+                window.setAnswerStatusText(result);
+            }
         }
     }
 }
